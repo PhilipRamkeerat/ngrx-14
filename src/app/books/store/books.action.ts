@@ -21,3 +21,16 @@ export const saveNewBookAPISuccess = createAction(
   '[Books API] save new book api success',
   props<{ newBook: Books }>()
 );
+
+// Update book
+
+// Trigger to the effects to execute update api call
+export const invokeUpdateBookAPI = createAction(
+  '[Books API] Invoke update book api',
+  props<{ updateBook: Books }>()
+);
+
+export const updateBookAPISuccess = createAction(
+  '[Books API] update book api success',
+  props<{ updateBook: Books }>()
+);
