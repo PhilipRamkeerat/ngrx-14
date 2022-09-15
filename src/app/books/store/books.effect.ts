@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { select, Store } from "@ngrx/store";
-import { EMPTY, map, mergeMap, withLatestFrom } from 'rxjs';
+import { EMPTY, map, mergeMap, switchMap, withLatestFrom } from 'rxjs';
+import { setAPIStatus } from "src/app/shared/store/app.action";
+import { Appstate } from "src/app/shared/store/appstate";
 import { BooksService } from "../books.service";
-import { booksFetchAPISuccess, invokeBooksAPI } from "./books.action";
+import { booksFetchAPISuccess, invokeBooksAPI, invokeSaveNewBookAPI, saveNewBookAPISuccess } from "./books.action";
 import { selectBooks } from "./books.selector";
 // É uma classe que irá invocar serviços e se comunicar com a API
 // Ela é invocada pela Action, ex: InvokeBooksApi
@@ -12,7 +14,9 @@ export class BooksEffect {
   constructor(
     private action$: Actions,
     private booksService: BooksService,
-    private store: Store) { }
+    private store: Store,
+    private appStore: Store<Appstate>
+  ) { }
 
   loadAllBooks$ = createEffect(() =>
     this.action$.pipe(
@@ -29,4 +33,27 @@ export class BooksEffect {
       })
     )
   );
+
+  saveNewBook$ = createEffect(() => {
+    return this.action$.pipe(
+      ofType(invokeSaveNewBookAPI),
+      switchMap((action) => {
+        this.appStore.dispatch(
+          setAPIStatus({ apiStatus: { apiResponseMessage: '', apiStatus: '' } })
+        );
+
+        // O serviço de criação é chamado e no seu sucesso a store é atualizada com os novos valores
+        return this.booksService.create(action.newBook).pipe(
+          map((data) => {
+            this.appStore.dispatch(
+              setAPIStatus({
+                apiStatus: { apiResponseMessage: '', apiStatus: 'success' },
+              })
+            );
+            return saveNewBookAPISuccess({ newBook: data })
+          })
+        );
+      })
+    );
+  });
 }
