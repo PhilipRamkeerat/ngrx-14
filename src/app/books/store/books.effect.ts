@@ -5,7 +5,7 @@ import { EMPTY, map, mergeMap, switchMap, withLatestFrom } from 'rxjs';
 import { setAPIStatus } from "src/app/shared/store/app.action";
 import { Appstate } from "src/app/shared/store/appstate";
 import { BooksService } from "../books.service";
-import { booksFetchAPISuccess, invokeBooksAPI, invokeSaveNewBookAPI, invokeUpdateBookAPI, saveNewBookAPISuccess, updateBookAPISuccess } from "./books.action";
+import { booksFetchAPISuccess, deleteBookAPISuccess, invokeBooksAPI, invokeDeleteBookAPI, invokeSaveNewBookAPI, invokeUpdateBookAPI, saveNewBookAPISuccess, updateBookAPISuccess } from "./books.action";
 import { selectBooks } from "./books.selector";
 // É uma classe que irá invocar serviços e se comunicar com a API
 // Ela é invocada pela Action, ex: InvokeBooksApi
@@ -72,6 +72,28 @@ export class BooksEffect {
               })
             );
             return updateBookAPISuccess({ updateBook: data });
+          })
+        );
+      })
+    );
+  });
+
+
+  deleteBooksAPI$ = createEffect(() => {
+    return this.action$.pipe(
+      ofType(invokeDeleteBookAPI),
+      switchMap((actions) => {
+        this.appStore.dispatch(
+          setAPIStatus({ apiStatus: { apiResponseMessage: '', apiStatus: '' } })
+        );
+        return this.booksService.delete(actions.id).pipe(
+          map(() => {
+            this.appStore.dispatch(
+              setAPIStatus({
+                apiStatus: { apiResponseMessage: '', apiStatus: 'success' },
+              })
+            );
+            return deleteBookAPISuccess({ id: actions.id });
           })
         );
       })

@@ -34,3 +34,15 @@ export const updateBookAPISuccess = createAction(
   '[Books API] update book api success',
   props<{ updateBook: Books }>()
 );
+
+// Delete Book
+export const invokeDeleteBookAPI = createAction(
+  '[Books API] Invoke delete book api',
+  props<{ id: number }>()
+);
+
+// Será utilizado pelo reducer para remover o livro selecionado
+export const deleteBookAPISuccess = createAction(
+  '[Books API] deleted book api success',
+  props<{ id: number }>()
+);
