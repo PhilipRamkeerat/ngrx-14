@@ -11,3 +11,6 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 Run `npm run json-run` to start the mock server json  and go to port `http://localhost:3000/`
 
 ### For study purposes, the Portuguese language is being used in this project for comments on the code
+
+
+Project based on [Tutorial](https://www.learmoreseekmore.com/2022/06/angular-14-statemanagement-crud-example-with-rxjs14.html)
