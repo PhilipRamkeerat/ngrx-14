@@ -5,7 +5,10 @@ import { EMPTY, map, mergeMap, switchMap, withLatestFrom } from 'rxjs';
 import { setAPIStatus } from "src/app/shared/store/app.action";
 import { Appstate } from "src/app/shared/store/appstate";
 import { BooksService } from "../books.service";
-import { booksFetchAPISuccess, deleteBookAPISuccess, invokeBooksAPI, invokeDeleteBookAPI, invokeSaveNewBookAPI, invokeUpdateBookAPI, saveNewBookAPISuccess, updateBookAPISuccess } from "./books.action";
+import {
+  booksFetchAPISuccess, deleteBookAPISuccess, invokeBooksAPI,
+  invokeDeleteBookAPI, invokeSaveNewBookAPI, invokeUpdateBookAPI, saveNewBookAPISuccess, updateBookAPISuccess
+} from "./books.action";
 import { selectBooks } from "./books.selector";
 // É uma classe que irá invocar serviços e se comunicar com a API
 // Ela é invocada pela Action, ex: InvokeBooksApi
@@ -41,8 +44,7 @@ export class BooksEffect {
         this.appStore.dispatch(
           setAPIStatus({ apiStatus: { apiResponseMessage: '', apiStatus: '' } })
         );
-
-        // O serviço de criação é chamado e no seu sucesso a store é atualizada com os novos valores
+        // O serviço de criação é chamado no seu sucesso a store é atualizada com os novos valores
         return this.booksService.create(action.newBook).pipe(
           map((data) => {
             this.appStore.dispatch(
@@ -50,7 +52,7 @@ export class BooksEffect {
                 apiStatus: { apiResponseMessage: '', apiStatus: 'success' },
               })
             );
-            return saveNewBookAPISuccess({ newBook: data })
+            return saveNewBookAPISuccess({ newBook: data });
           })
         );
       })
